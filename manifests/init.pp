@@ -23,7 +23,6 @@ class choco_app (
     ensure => present,
     path   => 'C:\ProgramData\Chocolatey\config\chocolatey.config',
     require => Exec['install-choco'],
-    source_permissions => ignore,
   }
 
   concat::fragment { 'chocolatey.config top':
