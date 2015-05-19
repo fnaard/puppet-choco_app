@@ -1,15 +1,15 @@
 class choco_app (
-  $contains_legacy_packages  = 'true',
-  $execution_timeout         = '2700',
+  $contains_legacy_packages   = 'true',
+  $execution_timeout          = '2700',
+  $checksum_files             = 'true',
+  $autouninstaller            = 'false',
+  $allow_global_confirmation  = 'false',
 
-  $checksum_files            = 'true',
-  $autouninstaller           = 'false',
-  $allow_global_confirmation = 'false',
-
+  $include_chocolatey_org_src = true,
 ) {
 
   # Use an exec of powershell to download and install Chocolatey.
-  exec { 'install chocolatey':
+  exec { 'install-choco':
     command  => 'iex ((new-object net.webclient).DownloadString("https://chocolatey.org/install.ps1")) >$null 2>&1',
     provider => 'powershell',
     creates  => 'C:\ProgramData\chocolatey\choco.exe',
@@ -20,6 +20,8 @@ class choco_app (
   # sources, by declaring choco_app::source resources.
   concat { 'chocolatey.config':
     ensure => present,
+    path   => 'C:\ProgramData\Chocolatey\config\chocolatey.config',
+    require => Exec['install-choco'],
   }
 
   concat::fragment { 'chocolatey.config top':
@@ -27,19 +29,23 @@ class choco_app (
     target => 'chocolatey.config',
     order => '01',
     content => template('choco_app/chocolatey.config.top.erb'),
+    require => Exec['install-choco'],
   }
 
-  choco_app::source { 'chocolatey':
-    source_id => 'chocolatey',
-    url       => 'https://chocolatey.org/api/v2/',
-    disabled  => 'false',
+  if $include_chocolatey_org_src {
+    choco_app::source { 'chocolatey':
+      source_id => 'chocolatey',
+      url       => 'https://chocolatey.org/api/v2/',
+      disabled  => 'false',
+    }
   }
 
   concat::fragment { 'chocolatey.config.bottom':
     ensure  => present,
     target  => 'chocolatey.config',
     order   => '99',
-    content => template('choco_app/chocolatey.config.bottom.erb')
+    content => template('choco_app/chocolatey.config.bottom.erb'),
+    require => Exec['install-choco'],
   }
 
 }
