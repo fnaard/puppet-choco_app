@@ -22,7 +22,7 @@ class choco_app (
     ensure => present,
   }
 
-  concat_fragment { 'chocolatey.config top':
+  concat::fragment { 'chocolatey.config top':
     ensure => present,
     target => 'chocolatey.config',
     order => '01',
@@ -35,7 +35,7 @@ class choco_app (
     disabled  => 'false',
   }
 
-  concat_fragment { 'chocolatey.config.bottom':
+  concat::fragment { 'chocolatey.config.bottom':
     ensure  => present,
     target  => 'chocolatey.config',
     order   => '99',

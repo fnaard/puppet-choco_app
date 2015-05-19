@@ -10,7 +10,7 @@ define choco_app::source (
   # This defined type simply wraps a concat fragment that will be
   # added to the middle of the chocolatey.config file, between
   # the <source> tags.
-  concat_fragment { "chocolatey source ${id}":
+  concat::fragment { "chocolatey source ${id}":
     ensure => present,
     target => 'chocolatey.config',
     order => '50',
