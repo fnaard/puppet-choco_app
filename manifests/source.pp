@@ -5,6 +5,7 @@ define choco_app::source (
   $source_id = $name,
   $url,
   $disabled  = 'false',
+  $order     = '50',
 ) {
 
   # This defined type simply wraps a concat fragment that will be
@@ -13,7 +14,7 @@ define choco_app::source (
   concat::fragment { "chocolatey source ${source_id}":
     ensure => present,
     target => 'chocolatey.config',
-    order => '50',
+    order => $order,
     content => template('choco_app/chocolatey.config.source.erb'),
     require => Exec['install-choco'],
   }

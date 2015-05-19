@@ -9,6 +9,7 @@ class choco_app (
 ) {
 
   # Use an exec of powershell to download and install Chocolatey.
+  # This is exactly how the website  main page tells people to do it.
   exec { 'install-choco':
     command  => 'iex ((new-object net.webclient).DownloadString("https://chocolatey.org/install.ps1")) >$null 2>&1',
     provider => 'powershell',
@@ -17,7 +18,7 @@ class choco_app (
 
   # Manage the chocolatey.config file by assembling from concat
   # fragments.  This makes it possible to include additional
-  # sources, by declaring choco_app::source resources.
+  # sources, by declaring choco_app::source resources when desired.
   concat { 'chocolatey.config':
     ensure => present,
     path   => 'C:\ProgramData\Chocolatey\config\chocolatey.config',
@@ -37,6 +38,7 @@ class choco_app (
       source_id => 'chocolatey',
       url       => 'https://chocolatey.org/api/v2/',
       disabled  => 'false',
+      order     => '30',
     }
   }
 
