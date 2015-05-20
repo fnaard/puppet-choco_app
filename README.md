@@ -3,77 +3,151 @@
 #### Table of Contents
 
 1. [Overview](#overview)
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with choco_app](#setup)
-    * [What choco_app affects](#what-choco_app-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with choco_app](#beginning-with-choco_app)
+2. [Module Description](#module-description)
+3. [Setup - The Basics](#setup)
 4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+5. [Reference - Parameters and Types](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+This module will install and configure the Chocolatey package manager and
+its sources.
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
+The main class uses the Powershell method from https://chocolatey.org/ to
+install the software.  That places the binaries in the default location of
+C:\ProgramData\chocolatey\bin, and updates the system's command path to include
+that directory.
 
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+A defined type allows the addition of custom sources to the Chocolatey config.
 
 ## Setup
 
-### What choco_app affects
+To simply install Chocolatey with all configuration defaults, and only the
+main chocolatey.org source defined, just include the class.  This results in
+the same set-up as if you'd gone to the chocolatey.org site and copied and
+pasted the powershell snippet from there into a command prompt on the target
+system.
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
-
-### Beginning with choco_app
-
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+```puppet
+include choco_app
+```
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+To install Chocolatey and add extra sources to the list, simply include the
+main class, and use a choco_app::source resource to add the extra source.
+For instance:
+
+```puppet
+include choco_app
+choco_app::source { 'extras':
+  url => 'http://artifactory.here.local:8081/artifactory/api/nuget/extras',
+}
+```
+
+If you would like to omit the main chocolatey.org source entirely from your
+configuration -- perhaps local policy requires that you aim at an internal
+mirror instead -- you might declare the class and sources like this:
+
+```puppet
+class { 'choco_app':
+  include_chocolatey_org_src => false,
+}
+choco_app::source { 'mirror':
+  url => 'http://artifactory.here.local:8081/artifactory/api/nuget/mirror',
+}
+choco_app::source { 'extras':
+  url => 'http://artifactory.here.local:8081/artifactory/api/nuget/extras',
+}
+```
+
+Multiple extra sources are allowed.  See the Reference section below if you
+need to explicitly order the sources in the chocolatey.config file.
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### Class
+
+choco_app: Installs and configures Chocolatey.
+
+####`contains_legacy_packages`
+
+The content of the <containsLegacyPackageInstalls> setting in the
+chocolatey.config file.  Valid options: true or false.  Default: 'true'.
+
+####`execution_timeout`
+
+The content of the <commandExecutionTimeoutSeconds> setting in the
+chocolatey.config file.  Valid options: integer.  Default: '2700'.
+
+####`checksum_files`
+
+The content of the <checksumFiles> setting in the chocolatey.config file.
+Valid options: true or false.  Default: 'true'.
+
+####`autouninstaller`
+
+The content of the <autoUninstaller> setting in the chocolatey.config file.
+Valid options: true or false.  Default: 'false'.
+
+####`allow_global_confirmation`
+
+The content of the <allowGlobalConfirmation> setting in the chocolatey.config
+file.  Valid options: true or false.  Default: 'false'.
+
+####`include_chocolatey_org_src`
+
+Whether or not to include the main chocolatey.org source when building the
+chocolatey.config file.  Useful if you're behind a firewall, or if local
+policy does not allow the use of sources on the Internet.  Valid options:
+true or false.  Default: 'true'.
+
+### Types
+
+* choco_app::source: Inserts an additional <source /> in the chocolatey.config
+file to make Chocolatey search additional repositories for packages.  See
+also the class parameter `include_chocolatey_org_src` if you wish to omit the
+main chocolatey.org repository itself from the config file.
+
+####`source_id`
+
+The string to supply as the "id" for this source in the chocolatey.config.
+Valid options: string.  Default value: the resource $name.  (namevar)
+
+####`url`
+
+The string to supply as the "value" for this source in the chocolatey.config.
+Valid options: string.  Default value: none.  (Required)
+
+####`disabled`
+
+The string to supply for the "disabled" attribute of this source.  Valid
+options: true or false.  Default: 'false'
+
+####`order`
+
+This parameter controls the relative order in which this source will be
+inserted in the chocolatey.config file.  The main chocolatey.org source
+is set to an order of '30'.  Valid options: 02 - 99.  Default value: 50.
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+Chocolatey is only available for Windows systems.  Thus, this module is only
+relevant on Windows.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+This module has been designed to provide the bare minimum functionality to
+install and configure Chocolatey.  The options that you can control in the
+chocolatey.config file are just the ones that a default installation has.
+There is nothing fancy here.
 
-## Release Notes/Contributors/Etc **Optional**
+Fancy pull requests are heartily welcomed.
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+## Release Notes
+
+* 0.1.0: Initial release.
