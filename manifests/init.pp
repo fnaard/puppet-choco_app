@@ -10,23 +10,24 @@ class choco_app (
 
   File { source_permissions => ignore, }
 
-  # Use an exec of powershell to download and install Chocolatey.
-  # This is exactly how the website  main page tells people to do it.
+  # INSTALL:
+  #
+  # Use the powershell method from https://chocolatey.org/ to install Choco.
   exec { 'install-choco':
     command  => 'iex ((new-object net.webclient).DownloadString("https://chocolatey.org/install.ps1")) >$null 2>&1',
     provider => 'powershell',
     creates  => 'C:\ProgramData\chocolatey\choco.exe',
   }
 
-  # Manage the chocolatey.config file by assembling from concat
-  # fragments.  This makes it possible to include additional
-  # sources, by declaring choco_app::source resources when desired.
+  # CONFIGURE:
+  #
+  # Manage the chocolatey.config file as an assembly of concat::fragments.
   concat { 'chocolatey.config':
     ensure => present,
     path   => 'C:\ProgramData\Chocolatey\config\chocolatey.config',
     require => Exec['install-choco'],
   }
-
+  # Throw in the parts of the chocolatey.config the go before <sources>
   concat::fragment { 'chocolatey.config top':
     ensure => present,
     target => 'chocolatey.config',
@@ -34,7 +35,7 @@ class choco_app (
     content => template('choco_app/chocolatey.config.top.erb'),
     require => Exec['install-choco'],
   }
-
+  # Add a source (unless disabled) that aims at the main chocolatey.org source.
   if $include_chocolatey_org_src {
     choco_app::source { 'chocolatey':
       source_id => 'chocolatey',
@@ -43,7 +44,7 @@ class choco_app (
       order     => '30',
     }
   }
-
+  # Add parts that go in the chocolatey.config beneath the <sources> section.
   concat::fragment { 'chocolatey.config.bottom':
     ensure  => present,
     target  => 'chocolatey.config',
