@@ -5,10 +5,10 @@
 1. [Overview](#overview)
 2. [Module Description](#module-description)
 3. [Setup - The Basics](#setup)
-4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - Parameters and Types](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+4. [Usage - Configuration Options and Additional Functionality](#usage)
+5. [Reference - Class Parameters and Types](#reference)
+5. [Limitations - OS Compatibility, etc.](#limitations)
+6. [Development - Guide for Contributing to the Module](#development)
 
 ## Overview
 
@@ -70,9 +70,9 @@ need to explicitly order the sources in the chocolatey.config file.
 
 ## Reference
 
-### Class
+### Class: choco_app
 
-choco_app: Installs and configures Chocolatey.
+Installs and configures Chocolatey.
 
 ####`contains_legacy_packages`
 
@@ -106,12 +106,12 @@ chocolatey.config file.  Useful if you're behind a firewall, or if local
 policy does not allow the use of sources on the Internet.  Valid options:
 true or false.  Default: 'true'.
 
-### Types
+### Type: choco_app::source
 
-* choco_app::source: Inserts an additional <source /> in the chocolatey.config
-file to make Chocolatey search additional repositories for packages.  See
-also the class parameter `include_chocolatey_org_src` if you wish to omit the
-main chocolatey.org repository itself from the config file.
+Inserts an additional <source /> in the chocolatey.config file to make
+Chocolatey search additional repositories for packages.  See also the class
+parameter `include_chocolatey_org_src` if you wish to omit the main
+chocolatey.org repository itself from the config file.
 
 ####`source_id`
 
