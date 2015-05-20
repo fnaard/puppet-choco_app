@@ -8,6 +8,8 @@ class choco_app (
   $include_chocolatey_org_src = true,
 ) {
 
+  File { source_permissions => ignore, }
+
   # Use an exec of powershell to download and install Chocolatey.
   # This is exactly how the website  main page tells people to do it.
   exec { 'install-choco':
