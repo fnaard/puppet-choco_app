@@ -70,68 +70,69 @@ need to explicitly order the sources in the chocolatey.config file.
 
 ## Reference
 
-### Class: choco_app
+### Classes
+
+#### choco_app
 
 Installs and configures Chocolatey.
 
-####`contains_legacy_packages`
+`contains_legacy_packages`: The content of the "containsLegacyPackageInstalls"
+setting in the chocolatey.config file.
+Valid options: true or false.
+Default: 'true'
 
-The content of the <containsLegacyPackageInstalls> setting in the
-chocolatey.config file.  Valid options: true or false.  Default: 'true'.
+`execution_timeout`: The content of the "commandExecutionTimeoutSeconds"
+setting in the chocolatey.config file.
+Valid options: integer.
+Default: '2700'
 
-####`execution_timeout`
+`checksum_files`: The content of the "checksumFiles" setting in the chocolatey.
+config file.
+Valid options: true or false.
+Default: 'true'
 
-The content of the <commandExecutionTimeoutSeconds> setting in the
-chocolatey.config file.  Valid options: integer.  Default: '2700'.
+`autouninstaller`: The content of the 'autoUninstaller" setting in the
+chocolatey.config file.
+Valid options: true or false.
+Default: 'false'
 
-####`checksum_files`
+`allow_global_confirmation`: The content of the "allowGlobalConfirmation"
+setting in the chocolatey.config file.
+Valid options: true or false.
+Default: 'false'
 
-The content of the <checksumFiles> setting in the chocolatey.config file.
-Valid options: true or false.  Default: 'true'.
+`include_chocolatey_org_src`: Whether or not to include the main chocolatey.org
+source when building the chocolatey.config file.  Useful if you're behind a
+firewall, or if local policy does not allow the use of sources on the
+Internet.
+Valid options: true or false.
+Default: 'true'
 
-####`autouninstaller`
+### Types
 
-The content of the <autoUninstaller> setting in the chocolatey.config file.
-Valid options: true or false.  Default: 'false'.
+#### choco_app::source
 
-####`allow_global_confirmation`
-
-The content of the <allowGlobalConfirmation> setting in the chocolatey.config
-file.  Valid options: true or false.  Default: 'false'.
-
-####`include_chocolatey_org_src`
-
-Whether or not to include the main chocolatey.org source when building the
-chocolatey.config file.  Useful if you're behind a firewall, or if local
-policy does not allow the use of sources on the Internet.  Valid options:
-true or false.  Default: 'true'.
-
-### Type: choco_app::source
-
-Inserts an additional <source /> in the chocolatey.config file to make
+Inserts an additional source element in the chocolatey.config file to make
 Chocolatey search additional repositories for packages.  See also the class
 parameter `include_chocolatey_org_src` if you wish to omit the main
 chocolatey.org repository itself from the config file.
 
-####`source_id`
+`source_id`: The string to supply as the "id" for this source in the chocolatey.
+config.
+Valid options: string.
+Default value: the resource $name.  (namevar)
 
-The string to supply as the "id" for this source in the chocolatey.config.
-Valid options: string.  Default value: the resource $name.  (namevar)
+`url`: The string to supply as the "value" for this source in the chocolatey.
+config.
+Valid options: string.
+Default value: none.  (Required)
 
-####`url`
+`disabled`: The string to supply for the "disabled" attribute of this source.
+Valid options: true or false.
+Default: 'false'
 
-The string to supply as the "value" for this source in the chocolatey.config.
-Valid options: string.  Default value: none.  (Required)
-
-####`disabled`
-
-The string to supply for the "disabled" attribute of this source.  Valid
-options: true or false.  Default: 'false'
-
-####`order`
-
-This parameter controls the relative order in which this source will be
-inserted in the chocolatey.config file.  The main chocolatey.org source
+`order`: This parameter controls the relative order in which this source will
+be inserted in the chocolatey.config file.  The main chocolatey.org source
 is set to an order of '30'.  Valid options: 02 - 99.  Default value: 50.
 
 ## Limitations
