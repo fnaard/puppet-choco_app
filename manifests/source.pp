@@ -15,7 +15,7 @@ define choco_app::source (
     ensure => present,
     target => 'chocolatey.config',
     order => $order,
-    content => template('choco_app/chocolatey.config.source.erb'),
+    content => regsubst(template('choco_app/chocolatey.config.source.erb'), '\n', "\r\n", 'EMG'),
     require => Exec['install-choco'],
   }
 

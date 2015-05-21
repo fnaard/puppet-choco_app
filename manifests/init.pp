@@ -32,7 +32,7 @@ class choco_app (
     ensure => present,
     target => 'chocolatey.config',
     order => '01',
-    content => template('choco_app/chocolatey.config.top.erb'),
+    content => regsubst(template('choco_app/chocolatey.config.top.erb'), '\n', "\r\n", 'EMG'),
     require => Exec['install-choco'],
   }
   # Add a source (unless disabled) that aims at the main chocolatey.org source.
@@ -49,7 +49,7 @@ class choco_app (
     ensure  => present,
     target  => 'chocolatey.config',
     order   => '99',
-    content => template('choco_app/chocolatey.config.bottom.erb'),
+    content => regsubst(template('choco_app/chocolatey.config.bottom.erb'), '\n', "\r\n", 'EMG'),
     require => Exec['install-choco'],
   }
 
