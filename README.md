@@ -12,8 +12,8 @@
 
 ## Overview
 
-This module will install and configure the Chocolatey package manager and
-its sources.
+This module will install and configure the Chocolatey package manager.  It can
+also configure Chocolatey to include custom package sources.
 
 ## Module Description
 
