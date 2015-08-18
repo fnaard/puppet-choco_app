@@ -45,7 +45,7 @@ class choco_app (
     }
   }
   # Add parts that go in the chocolatey.config beneath the <sources> section.
-  concat::fragment { 'chocolatey.config.bottom':
+  concat::fragment { 'chocolatey.config bottom':
     ensure  => present,
     target  => 'chocolatey.config',
     order   => '99',

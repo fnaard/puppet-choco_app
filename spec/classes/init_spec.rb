@@ -17,7 +17,7 @@ describe 'choco_app' do
 
     it { should contain_concat__fragment('chocolatey.config top') }
 
-    it { should contain_concat__fragment('chocolatey.config.bottom') }
+    it { should contain_concat__fragment('chocolatey.config bottom') }
 
   end
 end
