@@ -1,0 +1,7 @@
+fixtures:
+  symlinks:
+    choco_app: "#{source_dir}"
+  forge_modules:
+    concat: "puppetlabs-concat"
+    powershell: "puppetlabs-powershell"
+    stdlib: "puppetlabs-stdlib"
