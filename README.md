@@ -1,14 +1,25 @@
 # choco_app
 
+## OBSOLETE
+
+Happily, this module is now obsolete!  The chocolatey/chocolatey module is now
+able to install the Chocolatey application itself.  Please switch over to using
+that module to install Chocolatey.
+
+The only remaining useful functionality in this module is configuring the global
+list of sources for Chocolatey.  The easiest kludge around that is to set a
+resource default so that Package resources include an attribute for your local
+source.
+
 #### Table of Contents
 
 1. [Overview](#overview)
-2. [Module Description](#module-description)
-3. [Setup - The Basics](#setup)
-4. [Usage - Configuration Options and Additional Functionality](#usage)
-5. [Reference - Class Parameters and Types](#reference)
-5. [Limitations - OS Compatibility, etc.](#limitations)
-6. [Development - Guide for Contributing to the Module](#development)
+1. [Module Description](#module-description)
+1. [Setup - The Basics](#setup)
+1. [Usage - Configuration Options and Additional Functionality](#usage)
+1. [Reference - Class Parameters and Types](#reference)
+1. [Limitations - OS Compatibility, etc.](#limitations)
+1. [Development - Guide for Contributing to the Module](#development)
 
 ## Overview
 
